@@ -9,7 +9,7 @@ document.body.innerHTML = `
   <p>Example image asset: <img src="${exampleIconUrl}" class="icon" /></p>
   <p><span id="counter">0</span> Stars!</p>
   <button id="increment">🌟</button>
-  <button id="upgrade">Buy Auto-Clicker [20 stars]</button>
+  <button id="upgrade">Buy Auto-Clicker [10 stars]</button>
 `;
 
 const clickButton = document.getElementById("increment")!;
@@ -25,8 +25,8 @@ clickButton.addEventListener("click", () => {
 });
 
 upgradeButton.addEventListener("click", () => {
-  if (counter >= 20) {
-    counter -= 20;
+  if (counter >= 10) {
+    counter -= 10;
     growthRate += 1;
     counterElement.textContent = counter.toFixed(2);
     console.log("Upgrade purchased! Growth rate:", growthRate);
@@ -35,7 +35,7 @@ upgradeButton.addEventListener("click", () => {
 });
 
 function updateUpgradeButton() {
-  upgradeButton.disabled = counter < 20; // fixed with "as HTMLButtonElement"
+  upgradeButton.disabled = counter < 10; // fixed with "as HTMLButtonElement"
 }
 
 function autoClicker(timestamp: number) {
