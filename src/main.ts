@@ -24,13 +24,13 @@ function autoClicker(timestamp: number) {
   if (lastTime === null) {
     lastTime = timestamp;
   }
-  
+
   const deltaTime = (timestamp - lastTime) / 1000; // increases based on real time
   lastTime = timestamp;
-  
+
   counter += deltaTime;
   counterElement.textContent = counter.toFixed(2);
-  
+
   requestAnimationFrame(autoClicker);
 }
 
