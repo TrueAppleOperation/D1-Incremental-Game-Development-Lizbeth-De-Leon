@@ -14,7 +14,7 @@ document.body.innerHTML = `
 
 const clickButton = document.getElementById("increment")!;
 const counterElement = document.getElementById("counter")!;
-const upgradeButton = document.getElementById("upgrade")!;
+const upgradeButton = document.getElementById("upgrade")! as HTMLButtonElement;
 
 clickButton.addEventListener("click", () => {
   counter++;
@@ -35,7 +35,7 @@ upgradeButton.addEventListener("click", () => {
 });
 
 function updateUpgradeButton() {
-  upgradeButton.disabled = counter < 20; // check to fix later
+  upgradeButton.disabled = counter < 20; // fixed with "as HTMLButtonElement"
 }
 
 function autoClicker(timestamp: number) {
