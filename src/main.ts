@@ -5,7 +5,7 @@ let counter: number = 0;
 
 document.body.innerHTML = `
   <p>Example image asset: <img src="${exampleIconUrl}" class="icon" /></p>
-  <p>Number of stars: <span id="counter">0</span></p>
+  <p><span id="counter">0</span> Stars!</p>
   <button id="increment">🌟</button>
 `;
 
@@ -18,3 +18,10 @@ button.addEventListener("click", () => {
   console.log("Counter-keeping:", button, counterElement, counter);
   console.log("Star button was clicked!");
 });
+
+setInterval(autoClicker, 1000);
+
+function autoClicker() {
+  counter++;
+  counterElement.textContent = counter.toString();
+}
