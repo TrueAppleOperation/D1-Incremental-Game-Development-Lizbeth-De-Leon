@@ -5,7 +5,7 @@ let counter: number = 0;
 
 document.body.innerHTML = `
   <p>Example image asset: <img src="${exampleIconUrl}" class="icon" /></p>
-  <p>Counter: <span id="counter">0</span></p>
+  <p>Number of stars: <span id="counter">0</span></p>
   <button id="increment">🌟</button>
 `;
 
