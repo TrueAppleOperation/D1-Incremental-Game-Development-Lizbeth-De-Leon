@@ -56,7 +56,7 @@ upgradeButtons.forEach((button, index) => {
       counter -= itemPrices[index];
       growthRate += index + 1; //different growth rate for each
       itemOwned[index] += 1;
-      itemPrices[index] += 2*itemOwned[index]; // increase prices
+      itemPrices[index] += 2 * itemOwned[index]; // increase prices
       counterElement.textContent = counter.toFixed(2);
       console.log(`Upgrade ${index + 1} purchased! Growth rate:`, growthRate);
       updateUpgradeButtons();
