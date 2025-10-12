@@ -5,6 +5,7 @@ let counter: number = 0;
 let lastTime: number | null = null;
 let growthRate: number = 0;
 const itemOwned: number[] = [0, 0, 0, 0, 0];
+const itemPrices: number[] = [10, 25, 38, 44, 57];
 
 const buttonTexts = [ // different texts for each button
   "ah",
@@ -51,11 +52,11 @@ clickButton.addEventListener("click", () => {
 
 upgradeButtons.forEach((button, index) => {
   button.addEventListener("click", () => {
-    const cost = 10 * (index + 1);
-    if (counter >= cost) {
-      counter -= cost;
+    if (counter >= itemPrices[index]) {
+      counter -= itemPrices[index];
       growthRate += index + 1; //different growth rate for each
       itemOwned[index] += 1;
+      itemPrices[index] += 2*itemOwned[index]; // increase prices
       counterElement.textContent = counter.toFixed(2);
       console.log(`Upgrade ${index + 1} purchased! Growth rate:`, growthRate);
       updateUpgradeButtons();
@@ -65,11 +66,10 @@ upgradeButtons.forEach((button, index) => {
 
 function updateUpgradeButtons() {
   upgradeButtons.forEach((button, index) => {
-    const cost = 10 * (index + 1);
-    button.disabled = counter < cost;
+    button.disabled = counter < itemPrices[index];
     button.innerHTML = button.innerHTML = `${buttonTexts[index]}<br>Owns: ${
       itemOwned[index]
-    }<br>Cost: ${cost}`;
+    }<br>Cost: ${itemPrices[index]}`;
   });
 }
 
