@@ -1,15 +1,18 @@
-import exampleIconUrl from "./noun-paperclip-7598668-00449F.png";
 import "./style.css";
+import exampleIconUrl from "./we'reCooked.jpg";
 
 let counter: number = 0;
 let lastTime: number | null = null;
 let growthRate: number = 0;
 
 document.body.innerHTML = `
-  <p>Example image asset: <img src="${exampleIconUrl}" class="icon" /></p>
-  <p><span id="counter">0</span> Stars!</p>
-  <button id="increment">🌟</button>
-  <button id="upgrade">Buy Auto-Clicker [10 stars]</button>
+  <p><img src="${exampleIconUrl}" class="icon" /></p>
+  <p>It seems we are living through some interesting yet tough times!<p>
+  <p>How many disspointments have there been since Nov 6th 2024?<p>
+  <p><span id="counter">0</span> Disappointments</p>
+  <button id="increment">👎</button>
+  <br>
+  <button id="upgrade">11/6/24 Grand Announcement Auto-Clicker!</button>
 `;
 
 const clickButton = document.getElementById("increment")!;
