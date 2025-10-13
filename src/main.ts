@@ -8,17 +8,16 @@ const itemOwned: number[] = [0, 0, 0, 0, 0];
 const itemPrices: number[] = [10, 25, 38, 44, 57];
 
 const buttonTexts = [ // different texts for each button
-  "ah",
-  "ahh",
-  "ahhh",
-  "ahhhh",
-  "ahhhhhh",
+  "Wrongful Deportations of US Citizens and Immigrants",
+  "Pardoning Capitol Rioters",
+  "US's Involvement in Supporting the Genocide of Gaza",
+  "Weaponization of Trade Policy",
+  "Threatening Heavy Force against Peaceful Protesters",
 ];
 
 document.body.innerHTML = `
   <p><img src="${exampleIconUrl}" class="icon" /></p>
-  <p>It seems we are living through some interesting yet tough times!<p>
-  <p>How many disappointments have there been since Nov 6th 2024?<p>
+  <p>It seems we are living through some interesting yet tough times! <br> How many disappointments have there been since Nov 6th 2024?<p>
   <p><span id="counter">0</span> Disappointments</p>
   <button id="increment">👎</button>
   <br>
@@ -56,7 +55,7 @@ upgradeButtons.forEach((button, index) => {
       counter -= itemPrices[index];
       growthRate += index + 1; //different growth rate for each
       itemOwned[index] += 1;
-      itemPrices[index] += 2 * itemOwned[index]; // increase prices
+      itemPrices[index] += 4 * itemOwned[index]; // increase prices
       counterElement.textContent = counter.toFixed(2);
       console.log(`Upgrade ${index + 1} purchased! Growth rate:`, growthRate);
       updateUpgradeButtons();
