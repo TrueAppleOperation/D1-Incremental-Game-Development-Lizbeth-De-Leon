@@ -1,63 +1,100 @@
 import "./style.css";
 import exampleIconUrl from "./we'reCooked.jpg";
 
-let counter: number = 0;
-let lastTime: number | null = null;
-let growthRate: number = 0;
-const itemOwned: number[] = [0, 0, 0, 0, 0];
-const itemPrices: number[] = [10, 25, 38, 44, 57];
+// For Button/Counter Data
+const GAME_DATA = {
+  counter: 0,
+  lastTime: null as number | null,
+  growthRate: 0,
+  items: [
+    {
+      id: 1,
+      name: "Wrongful Deportations of US Citizens and Immigrants",
+      basePrice: 10,
+      baseGrowth: 1,
+      owned: 0,
+      currentPrice: 10,
+    },
+    {
+      id: 2,
+      name: "Pardoning Capitol Rioters",
+      basePrice: 25,
+      baseGrowth: 2,
+      owned: 0,
+      currentPrice: 25,
+    },
+    {
+      id: 3,
+      name: "US's Involvement in Supporting the Genocide of Gaza",
+      basePrice: 38,
+      baseGrowth: 3,
+      owned: 0,
+      currentPrice: 38,
+    },
+    {
+      id: 4,
+      name: "Weaponization of Trade Policy",
+      basePrice: 44,
+      baseGrowth: 4,
+      owned: 0,
+      currentPrice: 44,
+    },
+    {
+      id: 5,
+      name: "Threatening Heavy Force against Peaceful Protesters",
+      basePrice: 57,
+      baseGrowth: 5,
+      owned: 0,
+      currentPrice: 57,
+    },
+  ],
+};
 
-const buttonTexts = [ // different texts for each button
-  "Wrongful Deportations of US Citizens and Immigrants",
-  "Pardoning Capitol Rioters",
-  "US's Involvement in Supporting the Genocide of Gaza",
-  "Weaponization of Trade Policy",
-  "Threatening Heavy Force against Peaceful Protesters",
-];
+// For Opening Text
+const NARRATIVE = {
+  opening: "It seems we are living through some interesting yet tough times!",
+  subtitle: "How many disappointments have there been since Nov 6th 2024?",
+  counterLabel: "Disappointments",
+  clickButton: "👎",
+};
 
 document.body.innerHTML = `
   <p><img src="${exampleIconUrl}" class="icon" /></p>
-  <p>It seems we are living through some interesting yet tough times! <br> How many disappointments have there been since Nov 6th 2024?<p>
-  <p><span id="counter">0</span> Disappointments</p>
-  <button id="increment">👎</button>
+  <p>${NARRATIVE.opening} <br> ${NARRATIVE.subtitle}<p>
+  <p><span id="counter">0</span> ${NARRATIVE.counterLabel}</p>
+  <button id="increment">${NARRATIVE.clickButton}</button>
   <br>
   <br>
-<div style="display: flex; flex-wrap: wrap; gap: 10px;">
-    <button class="upgrade" id="upgrade1">${buttonTexts[0]}</button>
-    <button class="upgrade" id="upgrade2">${buttonTexts[1]}</button>
-    <button class="upgrade" id="upgrade3">${buttonTexts[2]}</button>
-    <button class="upgrade" id="upgrade4">${buttonTexts[3]}</button>
-    <button class="upgrade" id="upgrade5">${buttonTexts[4]}</button>
+  <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+    ${
+  GAME_DATA.items.map((item) =>
+    `<button class="upgrade" id="upgrade${item.id}">${item.name}</button>`
+  ).join("")
+}
   </div>
 `;
 
 const clickButton = document.getElementById("increment")!;
 const counterElement = document.getElementById("counter")!;
-const upgradeButtons = [
-  document.getElementById("upgrade1")! as HTMLButtonElement,
-  document.getElementById("upgrade2")! as HTMLButtonElement,
-  document.getElementById("upgrade3")! as HTMLButtonElement,
-  document.getElementById("upgrade4")! as HTMLButtonElement,
-  document.getElementById("upgrade5")! as HTMLButtonElement,
-];
+const upgradeButtons = GAME_DATA.items.map((item) =>
+  document.getElementById(`upgrade${item.id}`)! as HTMLButtonElement
+); // Sums up what I had previously
 
 clickButton.addEventListener("click", () => {
-  counter++;
-  counterElement.textContent = counter.toString();
-  console.log("Counter-keeping:", clickButton, counterElement, counter);
-  console.log("Star button was clicked!");
+  GAME_DATA.counter++;
+  counterElement.textContent = Math.floor(GAME_DATA.counter).toString();
   updateUpgradeButtons();
 });
 
 upgradeButtons.forEach((button, index) => {
   button.addEventListener("click", () => {
-    if (counter >= itemPrices[index]) {
-      counter -= itemPrices[index];
-      growthRate += index + 1; //different growth rate for each
-      itemOwned[index] += 1;
-      itemPrices[index] += 4 * itemOwned[index]; // increase prices
-      counterElement.textContent = counter.toFixed(2);
-      console.log(`Upgrade ${index + 1} purchased! Growth rate:`, growthRate);
+    const item = GAME_DATA.items[index];
+    if (GAME_DATA.counter >= item.currentPrice) {
+      GAME_DATA.counter -= item.currentPrice;
+      GAME_DATA.growthRate += item.baseGrowth; // Different growth rate for each
+      item.owned += 1;
+      item.currentPrice += 4 * item.owned; // Increase prices
+      counterElement.textContent = GAME_DATA.counter.toFixed(2);
       updateUpgradeButtons();
     }
   });
@@ -65,24 +102,24 @@ upgradeButtons.forEach((button, index) => {
 
 function updateUpgradeButtons() {
   upgradeButtons.forEach((button, index) => {
-    button.disabled = counter < itemPrices[index];
-    button.innerHTML = button.innerHTML = `${buttonTexts[index]}<br>Owns: ${
-      itemOwned[index]
-    }<br>Cost: ${itemPrices[index]}`;
+    const item = GAME_DATA.items[index];
+    button.disabled = GAME_DATA.counter < item.currentPrice;
+    button.innerHTML =
+      `${item.name}<br>Owns: ${item.owned}<br>Cost: ${item.currentPrice}`;
   });
 }
 
 function autoClicker(timestamp: number) {
-  if (lastTime === null) {
-    lastTime = timestamp;
+  if (GAME_DATA.lastTime === null) {
+    GAME_DATA.lastTime = timestamp;
   }
 
-  const deltaTime = (timestamp - lastTime) / 1000; // increases based on real time
-  lastTime = timestamp;
+  const deltaTime = (timestamp - GAME_DATA.lastTime) / 1000; // Increases based on real time
+  GAME_DATA.lastTime = timestamp;
 
-  if (growthRate > 0) {
-    counter += deltaTime * growthRate;
-    counterElement.textContent = counter.toFixed(2);
+  if (GAME_DATA.growthRate > 0) {
+    GAME_DATA.counter += deltaTime * GAME_DATA.growthRate;
+    counterElement.textContent = GAME_DATA.counter.toFixed(2);
     updateUpgradeButtons(); // Check affordability
   }
 
