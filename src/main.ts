@@ -5,7 +5,7 @@ import exampleIconUrl from "./we'reCooked.jpg";
 const GAME_DATA = {
   counter: 0,
   lastTime: null as number | null,
-  growthRate: 0,
+  passiveIncomeRate: 0,
   items: [
     {
       id: 1,
@@ -14,7 +14,7 @@ const GAME_DATA = {
       baseGrowth: 1,
       owned: 0,
       currentPrice: 10,
-      growthRate: "Growth: +1",
+      passiveIncomeRate: "Growth: +1",
     },
     {
       id: 2,
@@ -23,7 +23,7 @@ const GAME_DATA = {
       baseGrowth: 2,
       owned: 0,
       currentPrice: 25,
-      growthRate: "Growth: +2",
+      passiveIncomeRate: "Growth: +2",
     },
     {
       id: 3,
@@ -32,7 +32,7 @@ const GAME_DATA = {
       baseGrowth: 3,
       owned: 0,
       currentPrice: 38,
-      growthRate: "Growth: +3",
+      passiveIncomeRate: "Growth: +3",
     },
     {
       id: 4,
@@ -41,7 +41,7 @@ const GAME_DATA = {
       baseGrowth: 4,
       owned: 0,
       currentPrice: 44,
-      growthRate: "Growth: +4",
+      passiveIncomeRate: "Growth: +4",
     },
     {
       id: 5,
@@ -50,7 +50,7 @@ const GAME_DATA = {
       baseGrowth: 5,
       owned: 0,
       currentPrice: 57,
-      growthRate: "Growth: +5",
+      passiveIncomeRate: "Growth: +5",
     },
   ],
 };
@@ -89,14 +89,14 @@ function setupUI() {
   container.appendChild(counterParagraph);
 
   // Create growth rate display
-  const growthRateParagraph = document.createElement("p");
-  growthRateParagraph.textContent = "Growth Rate: ";
-  const growthRateElement = document.createElement("span");
-  growthRateElement.id = "growthRate";
-  growthRateElement.textContent = "0";
-  growthRateParagraph.appendChild(growthRateElement);
-  growthRateParagraph.append(" per second");
-  container.appendChild(growthRateParagraph);
+  const passiveIncomeRateParagraph = document.createElement("p");
+  passiveIncomeRateParagraph.textContent = "Growth Rate: ";
+  const passiveIncomeRateElement = document.createElement("span");
+  passiveIncomeRateElement.id = "passiveIncomeRate";
+  passiveIncomeRateElement.textContent = "0";
+  passiveIncomeRateParagraph.appendChild(passiveIncomeRateElement);
+  passiveIncomeRateParagraph.append(" per second");
+  container.appendChild(passiveIncomeRateParagraph);
 
   // Create click button
   const clickButton = document.createElement("button");
@@ -134,21 +134,25 @@ function setupUI() {
   return {
     clickButton,
     counterElement,
-    growthRateElement,
+    passiveIncomeRateElement,
     upgradeButtons,
   };
 }
 
 // Initialize UI and get element references
-const { clickButton, counterElement, growthRateElement, upgradeButtons } =
-  setupUI();
+const {
+  clickButton,
+  counterElement,
+  passiveIncomeRateElement,
+  upgradeButtons,
+} = setupUI();
 
-// Event listeners and game logic (identical to original)
+// Event listeners and game logic
 clickButton.addEventListener("click", () => {
   GAME_DATA.counter++;
   counterElement.textContent = Math.floor(GAME_DATA.counter).toString();
   updateDisplay();
-  updateUpgradeButtons();
+  syncUpgradeButtons();
 });
 
 upgradeButtons.forEach((button, index) => {
@@ -156,31 +160,31 @@ upgradeButtons.forEach((button, index) => {
     const item = GAME_DATA.items[index];
     if (GAME_DATA.counter >= item.currentPrice) {
       GAME_DATA.counter -= item.currentPrice;
-      GAME_DATA.growthRate += item.baseGrowth; // Different growth rate for each
+      GAME_DATA.passiveIncomeRate += item.baseGrowth; // Different growth rate for each
       item.owned += 1;
       item.currentPrice += 4 * item.owned; // Increase prices
       counterElement.textContent = GAME_DATA.counter.toFixed(2);
       updateDisplay();
-      updateUpgradeButtons();
+      syncUpgradeButtons();
     }
   });
 });
 
 function updateDisplay() { //shows growth rate
   counterElement.textContent = GAME_DATA.counter.toFixed(1);
-  growthRateElement.textContent = GAME_DATA.growthRate.toFixed(1);
+  passiveIncomeRateElement.textContent = GAME_DATA.passiveIncomeRate.toFixed(1);
 }
 
-function updateUpgradeButtons() {
+function syncUpgradeButtons() {
   upgradeButtons.forEach((button, index) => {
     const item = GAME_DATA.items[index];
     button.disabled = GAME_DATA.counter < item.currentPrice;
     button.innerHTML =
-      `${item.name}<br>${item.growthRate}<br>Owned: ${item.owned}<br>Cost: ${item.currentPrice}`;
+      `${item.name}<br>${item.passiveIncomeRate}<br>Owned: ${item.owned}<br>Cost: ${item.currentPrice}`;
   });
 }
 
-function autoClicker(timestamp: number) {
+function gameLoop(timestamp: number) {
   if (GAME_DATA.lastTime === null) {
     GAME_DATA.lastTime = timestamp;
   }
@@ -188,16 +192,16 @@ function autoClicker(timestamp: number) {
   const deltaTime = (timestamp - GAME_DATA.lastTime) / 1000; // Increases based on real time
   GAME_DATA.lastTime = timestamp;
 
-  if (GAME_DATA.growthRate > 0) {
-    GAME_DATA.counter += deltaTime * GAME_DATA.growthRate;
+  if (GAME_DATA.passiveIncomeRate > 0) {
+    GAME_DATA.counter += deltaTime * GAME_DATA.passiveIncomeRate;
     counterElement.textContent = GAME_DATA.counter.toFixed(2);
     updateDisplay();
-    updateUpgradeButtons(); // Check affordability
+    syncUpgradeButtons(); // Check affordability
   }
 
-  requestAnimationFrame(autoClicker);
+  requestAnimationFrame(gameLoop);
 }
 
-requestAnimationFrame(autoClicker);
+requestAnimationFrame(gameLoop);
 updateDisplay();
-updateUpgradeButtons();
+syncUpgradeButtons();
