@@ -62,30 +62,88 @@ const NARRATIVE = {
   clickButton: "🌡️",
 };
 
-document.body.innerHTML = `
-  <p><img src="${exampleIconUrl}" class="icon" /></p>
-  <p>${NARRATIVE.opening}<p>
-  <p>${NARRATIVE.counterLabel}<span id="counter">0</span></p>
-  <p>Growth Rate: <span id="growthRate">0</span> per second</p>
-  <button id="increment">${NARRATIVE.clickButton}</button>
-  <br>
-  <br>
-  <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-    ${
-  GAME_DATA.items.map((item) =>
-    `<button class="upgrade" id="upgrade${item.id}"></button>`
-  ).join("")
+function setupUI() {
+  // Create main container
+  const container = document.createElement("div");
+
+  // Create image element
+  const img = document.createElement("img");
+  img.src = exampleIconUrl;
+  img.className = "icon";
+  const imgParagraph = document.createElement("p");
+  imgParagraph.appendChild(img);
+  container.appendChild(imgParagraph);
+
+  // Create title
+  const title = document.createElement("p");
+  title.textContent = NARRATIVE.opening;
+  container.appendChild(title);
+
+  // Create counter display
+  const counterParagraph = document.createElement("p");
+  counterParagraph.textContent = NARRATIVE.counterLabel;
+  const counterElement = document.createElement("span");
+  counterElement.id = "counter";
+  counterElement.textContent = "0";
+  counterParagraph.appendChild(counterElement);
+  container.appendChild(counterParagraph);
+
+  // Create growth rate display
+  const growthRateParagraph = document.createElement("p");
+  growthRateParagraph.textContent = "Growth Rate: ";
+  const growthRateElement = document.createElement("span");
+  growthRateElement.id = "growthRate";
+  growthRateElement.textContent = "0";
+  growthRateParagraph.appendChild(growthRateElement);
+  growthRateParagraph.append(" per second");
+  container.appendChild(growthRateParagraph);
+
+  // Create click button
+  const clickButton = document.createElement("button");
+  clickButton.id = "increment";
+  clickButton.textContent = NARRATIVE.clickButton;
+  container.appendChild(clickButton);
+
+  // Add line breaks
+  container.appendChild(document.createElement("br"));
+  container.appendChild(document.createElement("br"));
+
+  // Create upgrades container
+  const upgradesContainer = document.createElement("div");
+  upgradesContainer.style.display = "flex";
+  upgradesContainer.style.flexWrap = "wrap";
+  upgradesContainer.style.gap = "10px";
+
+  // Create upgrade buttons
+  const upgradeButtons: HTMLButtonElement[] = [];
+  GAME_DATA.items.forEach((item) => {
+    const upgradeButton = document.createElement("button");
+    upgradeButton.className = "upgrade";
+    upgradeButton.id = `upgrade${item.id}`;
+    upgradeButtons.push(upgradeButton);
+    upgradesContainer.appendChild(upgradeButton);
+  });
+
+  container.appendChild(upgradesContainer);
+
+  // Clear body and append new UI
+  document.body.innerHTML = "";
+  document.body.appendChild(container);
+
+  // Return the elements that need to be used elsewhere
+  return {
+    clickButton,
+    counterElement,
+    growthRateElement,
+    upgradeButtons,
+  };
 }
-  </div>
-`;
 
-const clickButton = document.getElementById("increment")!;
-const counterElement = document.getElementById("counter")!;
-const growthRateElement = document.getElementById("growthRate")!;
-const upgradeButtons = GAME_DATA.items.map((item) =>
-  document.getElementById(`upgrade${item.id}`)! as HTMLButtonElement
-); // Sums up what I had previously
+// Initialize UI and get element references
+const { clickButton, counterElement, growthRateElement, upgradeButtons } =
+  setupUI();
 
+// Event listeners and game logic (identical to original)
 clickButton.addEventListener("click", () => {
   GAME_DATA.counter++;
   counterElement.textContent = Math.floor(GAME_DATA.counter).toString();
