@@ -1,5 +1,6 @@
+import backgroundImage from "./ClickerBackground.png";
+import buttonImage from "./earthh.gif";
 import "./style.css";
-import exampleIconUrl from "./we'reCooked.jpg";
 
 //////////////////////////////////////////////////////////////////////////////////
 // BUTTON | COUNTER DATA
@@ -68,16 +69,15 @@ const NARRATIVE = {
 // MAIN UI SETUP
 /////////////////////////////////////////////////////////////////////////////////
 function setupUI() {
-  // Create main container
+  // Create main container with center class
   const container = document.createElement("div");
+  container.className = "container";
 
-  // Create image element
-  const img = document.createElement("img");
-  img.src = exampleIconUrl;
-  img.className = "icon";
-  const imgParagraph = document.createElement("p");
-  imgParagraph.appendChild(img);
-  container.appendChild(imgParagraph);
+  // Set background image
+  document.documentElement.style.setProperty(
+    "--background-image",
+    `url(${backgroundImage})`,
+  );
 
   // Create title
   const title = document.createElement("p");
@@ -103,21 +103,24 @@ function setupUI() {
   passiveIncomeRateParagraph.append(" per second");
   container.appendChild(passiveIncomeRateParagraph);
 
-  // Create click button
+  // Create click button with Earth image
   const clickButton = document.createElement("button");
   clickButton.id = "increment";
-  clickButton.textContent = NARRATIVE.clickButton;
+
+  // Create Earth image element for the button
+  const earthImg = document.createElement("img");
+  earthImg.src = buttonImage;
+  earthImg.alt = "Earth Click Button";
+  clickButton.appendChild(earthImg);
+
   container.appendChild(clickButton);
 
-  // Add line breaks
   container.appendChild(document.createElement("br"));
   container.appendChild(document.createElement("br"));
 
-  // Create upgrades container
+  // Create upgrades container with center class
   const upgradesContainer = document.createElement("div");
-  upgradesContainer.style.display = "flex";
-  upgradesContainer.style.flexWrap = "wrap";
-  upgradesContainer.style.gap = "10px";
+  upgradesContainer.className = "upgrades-container";
 
   // Create upgrade buttons
   const upgradeButtons: HTMLButtonElement[] = [];
